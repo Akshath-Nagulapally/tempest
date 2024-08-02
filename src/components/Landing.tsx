@@ -35,7 +35,6 @@ import {
   CardFooter,
 } from '@/components/ui/card'
 import { Demo } from '@/components/Demo'
-import SplineViewer from '@/components/SplineViewer' // Import the SplineViewer component
 import Spline from '@splinetool/react-spline'
 import ComparisionTable from './ComparisionTable'
 
