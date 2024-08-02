@@ -1,48 +1,63 @@
-import Link from "next/link"
-import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
-import { Separator } from "@/components/ui/separator"
-import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator } from "@/components/ui/dropdown-menu"
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs"
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card"
+import Link from 'next/link'
+import { Button } from '@/components/ui/button'
+import { Badge } from '@/components/ui/badge'
+import { Separator } from '@/components/ui/separator'
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+} from '@/components/ui/dropdown-menu'
+import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardContent,
+} from '@/components/ui/card'
 
 export default function Projectsection() {
   const deployments = [
     {
-      url: "www.example.com",
-      activity: "fix: auth issues for third-party integration",
-      timestamp: "17m ago by shadcn",
+      url: 'www.example.com',
+      activity: 'fix: auth issues for third-party integration',
+      timestamp: '17m ago by shadcn',
     },
     {
-      url: "app.example.com",
-      activity: "feat: implement action logging",
-      timestamp: "32m ago by maxleiter",
+      url: 'app.example.com',
+      activity: 'feat: implement action logging',
+      timestamp: '32m ago by maxleiter',
     },
     {
-      url: "docs.example.com",
-      activity: "feat: implement history sidebar",
-      timestamp: "1 day ago by shadcn",
+      url: 'docs.example.com',
+      activity: 'feat: implement history sidebar',
+      timestamp: '1 day ago by shadcn',
     },
     {
-      url: "dasd.example.com",
-      activity: "feat: implement history sidebar",
-      timestamp: "1 day ago by shadcn",
+      url: 'dasd.example.com',
+      activity: 'feat: implement history sidebar',
+      timestamp: '1 day ago by shadcn',
     },
     {
-      url: "dasd.example.com",
-      activity: "feat: implement history sidebar",
-      timestamp: "1 day ago by shadcn",
+      url: 'dasd.example.com',
+      activity: 'feat: implement history sidebar',
+      timestamp: '1 day ago by shadcn',
     },
-
   ]
   return (
-    <div className="flex flex-col w-full min-h-screen bg-muted/40">
-      <header className="flex items-center h-16 px-4 border-b shrink-0 md:px-6 bg-background">
-        <Link href="#" className="flex items-center gap-2 text-lg font-semibold sm:text-base mr-4" prefetch={false}>
-          <FrameIcon className="w-6 h-6" />
+    <div className="flex min-h-screen w-full flex-col bg-muted/40">
+      <header className="flex h-16 shrink-0 items-center border-b bg-background px-4 md:px-6">
+        <Link
+          href="#"
+          className="mr-4 flex items-center gap-2 text-lg font-semibold sm:text-base"
+          prefetch={false}
+        >
+          <FrameIcon className="h-6 w-6" />
           <span className="sr-only">Acme Inc</span>
         </Link>
-        <nav className="hidden font-medium sm:flex flex-row items-center gap-5 text-sm lg:gap-6">
+        <nav className="hidden flex-row items-center gap-5 text-sm font-medium sm:flex lg:gap-6">
           <Link href="#" className="text-muted-foreground" prefetch={false}>
             Projects
           </Link>
@@ -59,52 +74,73 @@ export default function Projectsection() {
             Settings
           </Link>
         </nav>
-        <div className="flex items-center w-full gap-4 md:ml-auto md:gap-2 lg:gap-4">
-          <Button variant="ghost" size="icon" className="rounded-full ml-auto">
-            <img src="/placeholder.svg" width="32" height="32" className="rounded-full border" alt="Avatar" />
+        <div className="flex w-full items-center gap-4 md:ml-auto md:gap-2 lg:gap-4">
+          <Button variant="ghost" size="icon" className="ml-auto rounded-full">
+            <img
+              src="/placeholder.svg"
+              width="32"
+              height="32"
+              className="rounded-full border"
+              alt="Avatar"
+            />
             <span className="sr-only">Toggle user menu</span>
           </Button>
         </div>
       </header>
       <main className="flex min-h-[calc(100vh_-_theme(spacing.16))] flex-1 flex-col gap-4 p-4 md:gap-8 md:p-10">
-        <div className="max-w-6xl w-full mx-auto grid gap-2">
-          <h1 className="font-semibold text-3xl">Deployments</h1>
+        <div className="mx-auto grid w-full max-w-6xl gap-2">
+          <h1 className="text-3xl font-semibold">Deployments</h1>
         </div>
-        <div className="grid gap-6 max-w-6xl w-full mx-auto">
-          <div className="border rounded-lg overflow-hidden grid gap-4 lg:gap-px lg:bg-gray-100">
+        <div className="mx-auto grid w-full max-w-6xl gap-6">
+          <div className="grid gap-4 overflow-hidden rounded-lg border lg:gap-px lg:bg-gray-100">
             {deployments.map((deployment, index) => (
-              <div key={index} className="flex flex-col lg:flex-row bg-background text-sm p-2 relative">
-                <div className="p-2 grid gap-1 flex-1">
+              <div
+                key={index}
+                className="relative flex flex-col bg-background p-2 text-sm lg:flex-row"
+              >
+                <div className="grid flex-1 gap-1 p-2">
                   <div className="flex items-center gap-2">
-                    <img src="/placeholder.svg" width="16" height="16" alt="Favicon" className="rounded-full" />
+                    <img
+                      src="/placeholder.svg"
+                      width="16"
+                      height="16"
+                      alt="Favicon"
+                      className="rounded-full"
+                    />
                     <div className="font-medium">{deployment.url}</div>
                   </div>
                   <div className="text-muted-foreground">
-                    Production{" "}
+                    Production{' '}
                     <Badge variant="outline" className="bg-background">
                       Current
                     </Badge>
                   </div>
                 </div>
                 <Separator className="my-2 lg:hidden" />
-                <div className="p-2 grid gap-1 flex-1">
+                <div className="grid flex-1 gap-1 p-2">
                   <div className="flex items-center gap-2">
-                    <GitCommitVerticalIcon className="w-4 h-4" />
+                    <GitCommitVerticalIcon className="h-4 w-4" />
                     <span className="line-clamp-1">{deployment.activity}</span>
                   </div>
                   <div className="flex items-center gap-2">
-                    <GitBranchIcon className="w-4 h-4" />
+                    <GitBranchIcon className="h-4 w-4" />
                     <span>main</span>
                   </div>
                 </div>
                 <Separator className="my-2 lg:hidden" />
-                <div className="p-2 grid gap-1 flex-1">
-                  <div className="flex items-center gap-2 text-muted-foreground">{deployment.timestamp}</div>
+                <div className="grid flex-1 gap-1 p-2">
+                  <div className="flex items-center gap-2 text-muted-foreground">
+                    {deployment.timestamp}
+                  </div>
                 </div>
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" size="icon" className="absolute top-4 right-4">
-                      <MoveHorizontalIcon className="w-4 h-4" />
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="absolute right-4 top-4"
+                    >
+                      <MoveHorizontalIcon className="h-4 w-4" />
                       <span className="sr-only">Toggle menu</span>
                     </Button>
                   </DropdownMenuTrigger>
@@ -118,14 +154,13 @@ export default function Projectsection() {
               </div>
             ))}
           </div>
-
         </div>
       </main>
     </div>
   )
 }
 
-function DogIcon(props) {
+function DogIcon(props: any) {
   return (
     <svg
       {...props}
@@ -149,8 +184,7 @@ function DogIcon(props) {
   )
 }
 
-
-function FrameIcon(props) {
+function FrameIcon(props: any) {
   return (
     <svg
       {...props}
@@ -172,8 +206,7 @@ function FrameIcon(props) {
   )
 }
 
-
-function GitBranchIcon(props) {
+function GitBranchIcon(props: any) {
   return (
     <svg
       {...props}
@@ -195,8 +228,7 @@ function GitBranchIcon(props) {
   )
 }
 
-
-function GitCommitVerticalIcon(props) {
+function GitCommitVerticalIcon(props: any) {
   return (
     <svg
       {...props}
@@ -217,8 +249,7 @@ function GitCommitVerticalIcon(props) {
   )
 }
 
-
-function GithubIcon(props) {
+function GithubIcon(props: any) {
   return (
     <svg
       {...props}
@@ -238,8 +269,7 @@ function GithubIcon(props) {
   )
 }
 
-
-function MoveHorizontalIcon(props) {
+function MoveHorizontalIcon(props: any) {
   return (
     <svg
       {...props}
@@ -260,8 +290,7 @@ function MoveHorizontalIcon(props) {
   )
 }
 
-
-function PlusIcon(props) {
+function PlusIcon(props: any) {
   return (
     <svg
       {...props}
@@ -281,8 +310,7 @@ function PlusIcon(props) {
   )
 }
 
-
-function SlackIcon(props) {
+function SlackIcon(props: any) {
   return (
     <svg
       {...props}
@@ -308,8 +336,7 @@ function SlackIcon(props) {
   )
 }
 
-
-function XIcon(props) {
+function XIcon(props: any) {
   return (
     <svg
       {...props}
