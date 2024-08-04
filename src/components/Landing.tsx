@@ -36,7 +36,7 @@ import {
 } from '@/components/ui/card'
 import { Demo } from '@/components/Demo'
 
-import SplineViewer from '@/components/SplineViewer'
+// import SplineViewer from '@/components/SplineViewer'
 
 // import Spline from '@splinetool/react-spline'
 import ComparisionTable from './ComparisionTable'
@@ -79,7 +79,7 @@ export function Landing() {
               </div>
               <div className="flex flex-col items-start justify-center space-y-4">
                 {/* <Spline scene="https://prod.spline.design/BlifPelOQWyhJHBR/scene.splinecode" /> */}
-                <SplineViewer />
+                {/* <SplineViewer /> */}
 
                 {/* <SplineViewer url="https://my.spline.design/glassdonut-3fd65cbafe916e0d15c13978ac70500a/" /> */}
               </div>
