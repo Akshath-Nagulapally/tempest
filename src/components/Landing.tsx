@@ -35,11 +35,8 @@ import {
   CardFooter,
 } from '@/components/ui/card'
 import { Demo } from '@/components/Demo'
-
-// import SplineViewer from '@/components/SplineViewer'
-
-// import Spline from '@splinetool/react-spline'
 import ComparisionTable from './ComparisionTable'
+import Head from 'next/head'
 
 export function Landing() {
   return (
@@ -57,14 +54,22 @@ export function Landing() {
                   without fighting VMs at 2 am.{' '}
                 </p>
                 <div className="mt-6 w-full max-w-sm space-y-2">
-                  <form className="flex gap-2">
-                    <Input
-                      type="email"
-                      placeholder="Enter your email"
-                      className="max-w-lg flex-1"
-                    />
-                    <Button type="submit">Join Waitlist</Button>
-                  </form>
+
+                  <>
+                  <Head>
+        <script src="https://getlaunchlist.com/js/widget-diy.js" defer></script>
+      </Head>
+      <form className="flex gap-2" action="https://getlaunchlist.com/s/wbGtvd" method="POST">
+        <Input
+          type="email"
+          name="email"
+          placeholder="Enter your email"
+          className="max-w-lg flex-1"
+          required
+        />
+        <Button type="submit">Join early users program</Button>
+      </form>
+                  </>
                   <p className="text-xs text-muted-foreground">
                     Sign up to get notified when we launch.{' '}
                     <Link
