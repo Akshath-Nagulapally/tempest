@@ -1,3 +1,4 @@
+import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -9,6 +10,7 @@ import {
   DropdownMenuItem,
   DropdownMenuSeparator,
 } from '@/components/ui/dropdown-menu'
+
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
 import {
   Card,
@@ -17,35 +19,45 @@ import {
   CardDescription,
   CardContent,
 } from '@/components/ui/card'
+import { cookies } from 'next/headers'
 
-export default function Projectsection() {
-  const deployments = [
-    {
-      url: 'www.example.com',
-      activity: 'fix: auth issues for third-party integration',
-      timestamp: '17m ago by shadcn',
-    },
-    {
-      url: 'app.example.com',
-      activity: 'feat: implement action logging',
-      timestamp: '32m ago by maxleiter',
-    },
-    {
-      url: 'docs.example.com',
-      activity: 'feat: implement history sidebar',
-      timestamp: '1 day ago by shadcn',
-    },
-    {
-      url: 'dasd.example.com',
-      activity: 'feat: implement history sidebar',
-      timestamp: '1 day ago by shadcn',
-    },
-    {
-      url: 'dasd.example.com',
-      activity: 'feat: implement history sidebar',
-      timestamp: '1 day ago by shadcn',
-    },
-  ]
+import { createServerClient } from '@/utils/supabase'
+
+import { redirect } from 'next/navigation'
+
+export default async function Projectsection() {
+  
+  
+  const cookieStore = cookies()
+  const supabase = createServerClient(cookieStore)
+
+
+  const redirectToAddProject = async () => {
+    "use server"
+    return redirect('/add-project');
+  }
+
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
+
+  console.log(user.id)
+
+  let { data: projects, error } = await supabase
+  .from('projects') 
+  .select('*')
+  .eq('user_id', user.id)
+
+  console.log(projects)
+  console.log(error)
+
+  const deployments = projects.map(project => ({
+    url: project.repo_url,
+    activity: `feat: new project ${project.name} deployed`,
+    timestamp: 'just now by user'
+  }));
+
   return (
     <div className="flex min-h-screen w-full flex-col bg-muted/40">
       <header className="flex h-16 shrink-0 items-center border-b bg-background px-4 md:px-6">
@@ -92,6 +104,13 @@ export default function Projectsection() {
           <h1 className="text-3xl font-semibold">Deployments</h1>
         </div>
         <div className="mx-auto grid w-full max-w-6xl gap-6">
+          <div>
+            <form>
+            <Button variant="solid" className="bg-primary text-black" formAction={redirectToAddProject}>
+              Add Project
+            </Button>
+            </form>
+          </div>
           <div className="grid gap-4 overflow-hidden rounded-lg border lg:gap-px lg:bg-gray-100">
             {deployments.map((deployment, index) => (
               <div
@@ -159,6 +178,7 @@ export default function Projectsection() {
     </div>
   )
 }
+
 
 function DogIcon(props: any) {
   return (

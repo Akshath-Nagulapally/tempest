@@ -1,20 +1,54 @@
 import { NextResponse } from 'next/server'
 import { cookies } from 'next/headers'
 import { createServerClient } from '@/utils/supabase'
+import axios from 'axios'
 
 export async function GET(request: Request) {
-  // The `/auth/callback` route is required for the server-side auth flow implemented
-  // by the Auth Helpers package. It exchanges an auth code for the user's session.
-  // https://supabase.com/docs/guides/auth/auth-helpers/nextjs#managing-sign-in-with-code-exchange
   const requestUrl = new URL(request.url)
   const code = requestUrl.searchParams.get('code')
 
   if (code) {
     const cookieStore = cookies()
     const supabase = createServerClient(cookieStore)
-    await supabase.auth.exchangeCodeForSession(code)
+
+    async function updateUsername(userId, newUsername) {
+      const { data, error } = await supabase
+        .from('profiles')
+        .upsert({ id: userId, username: newUsername })
+        .select();
+    
+      if (error) {
+        console.error('Error updating username:', error);
+        return null; // Return null or handle the error as needed
+      } else {
+        console.log('Username updated successfully:', data);
+        return data; // Return the updated data if needed
+      }
+    }
+  
+    const { data, error } = await supabase.auth.exchangeCodeForSession(code)
+    const userId = data.user?.id; // Assuming data.user contains the user ID
+    const newUsername = data.user?.user_metadata.preferred_username; // Replace with the new username
+
+    updateUsername(userId, newUsername)
+    .then(updatedData => {
+      if (updatedData) {
+        console.log('Updated profile data:', updatedData);
+      }
+    })
+    .catch(err => {
+      console.error('Error in updateUsername function:', err);
+    });
+    
+    if (error) {
+      console.error('Error exchanging code for session:', error)
+      return NextResponse.redirect(`${requestUrl.origin}/error`)
+    }
+
+    const accessToken = data.session.access_token
+    console.log('Access Token:', accessToken)  // Log the access token
+
   }
 
-  // URL to redirect to after sign in process completes
-  return NextResponse.redirect(requestUrl.origin)
+  return NextResponse.redirect(`${requestUrl.origin}/projects`)
 }

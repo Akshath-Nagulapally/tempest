@@ -1,8 +1,12 @@
 //Make some more validations happen: for example you need to make sure that the name inputted is 63 characters and prevent the abuse and stuff from happenning.
 
+import { createServerClient } from '@/utils/supabase'
+import { cookies } from 'next/headers'
+
+
 export const dynamic = 'force-dynamic'; // static by default, unless reading the request
  
-export function GET(request: Request) {
+export async function GET(request: Request) {
 
 
     function generateFunctionalName(projectName: string, existingFunctionalNames: string[]): string {
@@ -31,7 +35,19 @@ export function GET(request: Request) {
         
     const url = new URL(request.url);
     const projectName = url.searchParams.get('name') || '';
-    const existingFunctionalNames = ["cat", "cat-123aabba"]; // This should be replaced with your actual existing names list
+
+    const cookieStore = cookies()
+    const supabase = createServerClient(cookieStore)
+  
+    
+    let { data: projects, error } = await supabase
+    .from('projects')
+    .select('functional_name')
+
+
+    const existingFunctionalNames = projects?.map(item => item.functional_name);
+
+    console.log(existingFunctionalNames); // Output: ['hithere1235r', 'asd']
 
     if (!projectName) {
         return new Response('Project name is required', { status: 400 });
