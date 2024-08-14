@@ -18,7 +18,7 @@ export default function Login({
     const supabase = createServerClient(cookieStore)
 
     const origin = headers().get('origin')
-
+    
     console.log('GitHub sign-in activated')
 
     const { data, error } = await supabase.auth.signInWithOAuth({
@@ -28,8 +28,6 @@ export default function Login({
       },
       
     })
-
-
 
     if (error) {
       console.log(error)
