@@ -62,10 +62,16 @@ export async function GET(request: Request) {
   .select("*")
   // Filters
   .eq('id', user?.id)
+  
 
-  const username = profiles[0].username
-  console.log(username);
+  if (!profiles || profiles.length === 0) {
+    return new Response(JSON.stringify([]), {
+      headers: { 'Content-Type': 'application/json' }
+    });
+  }
 
+
+  const username = profiles[0].username;
 
 
   
@@ -94,8 +100,10 @@ export async function GET(request: Request) {
     return repos;
   }
   
-  const user_select_repos = await listRepositories().catch(console.error);
 
+  const user_select_repos = await listRepositories().catch(console.error);
+  
+  
   return new Response(JSON.stringify(user_select_repos), {
     headers: { 'Content-Type': 'application/json' }
   });

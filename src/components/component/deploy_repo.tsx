@@ -167,7 +167,7 @@ export function deploy_repo() {
   )
 }
 
-function FrameIcon(props) {
+function FrameIcon(props: any) {
   return (
     <svg
       {...props}
@@ -190,7 +190,7 @@ function FrameIcon(props) {
 }
 
 
-function PlusIcon(props) {
+function PlusIcon(props: any) {
   return (
     <svg
       {...props}

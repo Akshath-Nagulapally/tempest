@@ -7,24 +7,28 @@ export async function GET(request: Request) {
   const requestUrl = new URL(request.url)
   const code = requestUrl.searchParams.get('code')
 
-  if (code) {
-    const cookieStore = cookies()
-    const supabase = createServerClient(cookieStore)
+  const cookieStore = cookies()
+  const supabase = createServerClient(cookieStore)
 
-    async function updateUsername(userId, newUsername) {
-      const { data, error } = await supabase
-        .from('profiles')
-        .upsert({ id: userId, username: newUsername })
-        .select();
-    
-      if (error) {
-        console.error('Error updating username:', error);
-        return null; // Return null or handle the error as needed
-      } else {
-        console.log('Username updated successfully:', data);
-        return data; // Return the updated data if needed
-      }
+
+  async function updateUsername(userId: any, newUsername: any) {
+    const { data, error } = await supabase
+      .from('profiles')
+      .upsert({ id: userId, username: newUsername })
+      .select();
+  
+    if (error) {
+      console.error('Error updating username:', error);
+      return null; // Return null or handle the error as needed
+    } else {
+      console.log('Username updated successfully:', data);
+      return data; // Return the updated data if needed
     }
+  }
+
+
+  if (code) {
+
   
     const { data, error } = await supabase.auth.exchangeCodeForSession(code)
     const userId = data.user?.id; // Assuming data.user contains the user ID

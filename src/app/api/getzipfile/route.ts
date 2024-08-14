@@ -26,13 +26,13 @@ const auth = createAppAuth({
   privateKey
 });
 
-async function getInstallationId(owner, repo) {
+async function getInstallationId(owner: string, repo: string) {
   const octokit = new Octokit({ authStrategy: createAppAuth, auth: { appId, privateKey } });
   const { data } = await octokit.request('GET /repos/{owner}/{repo}/installation', { owner, repo });
   return data.id;
 }
 
-async function downloadRepoArchive(owner, repo, ref) {
+async function downloadRepoArchive(owner: string, repo: string, ref: string) {
   try {
     const installationId = await getInstallationId(owner, repo);
     const { token } = await auth({ type: 'installation', installationId });
@@ -48,7 +48,7 @@ async function downloadRepoArchive(owner, repo, ref) {
     const url = response.url;
     console.log('Repository archive downloaded:', url);
     return url;
-  } catch (error) {
+  } catch (error: any) {
     if (error.response) {
       console.error(`Error! Status: ${error.response.status}. Message: ${error.response.data.message}`);
     } else {

@@ -19,8 +19,6 @@ cd sample_location
 
 nixpacks build . --name "akshathnag06002/${FUNCTIONAL_NAME}:latest"
 
-echo "Akkikalli01!!!!" | docker login -u akshathnag06002 --password-stdin
-
 # Tag the Docker image with the new repository and the FUNCTIONAL_NAME as the tag. 
 docker tag "akshathnag06002/${FUNCTIONAL_NAME}:latest" "akshathnag06002/akkiregistry:${FUNCTIONAL_NAME}"
 

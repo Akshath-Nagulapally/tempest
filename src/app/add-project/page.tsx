@@ -7,10 +7,29 @@ import { Select, SelectTrigger, SelectValue, SelectContent, SelectGroup, SelectL
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { redirect } from 'next/navigation'
+import { useRouter } from 'next/navigation'
+
+import { useUserStore } from '@/zustand'  // import the store
+
+
 
 export default function DeployRepo() {
-  const [repositories, setRepositories] = useState([]);
-  const [selectedRepo, setSelectedRepo] = useState(null);
+
+
+  // const [repositories, setRepositories] = useState([]);
+  // const [selectedRepo, setSelectedRepo] = useState(null);
+  const [projectName, setProjectName] = useState('');
+  const [targetPort, setTargetPort] = useState('');  // New state for the port
+  const router = useRouter();
+  type Repository = {
+    reponame: string;
+    // Add any other properties your repository objects have
+  };
+
+  const [repositories, setRepositories] = useState<Repository[]>([]);
+  const [selectedRepo, setSelectedRepo] = useState<Repository | null>(null);
+
+
 
   useEffect(() => {
     const getAccessibleRepos = async () => {
@@ -25,6 +44,9 @@ export default function DeployRepo() {
     getAccessibleRepos();
   }, []);
 
+
+  
+
   const handleDeploy = async () => {
     if (selectedRepo) {
       // Get the link for the GitHub repo 
@@ -36,21 +58,28 @@ export default function DeployRepo() {
         body: JSON.stringify(selectedRepo),
       });
 
-      const functionalName = 'samplefunctionalnamethree';
+      const zipDownloadUrl = await response.text(); // or the correct key from the JSON response
 
-          // Get the link for the GitHub repo 
-      const functionalname = await fetch(`/api/functional_name?name=${encodeURIComponent(functionalName)}`, {
+
+
+      ///Getting the functional name of a deployment. Input: normal name
+      const userAssignedProjectName = projectName;
+
+
+
+
+
+          // Get the link for the GitHub repo zip download 
+      const functionalname = await fetch(`/api/functional_name?name=${encodeURIComponent(userAssignedProjectName)}`, {
             method: 'GET',
             headers: {
               'Content-Type': 'application/json',
             },
           });
 
-      console.log(functionalname)
-    
+      const functionalName = await functionalname.text();
+      console.log("created functional name on client side:", functionalName) 
 
-
-      const zipDownloadUrl = await response.text(); // or the correct key from the JSON response
 
       // Build the repository: Inputs: functional name and repo link
       const buildrepo = await fetch(`/api/buildrepo?ZIPDOWNLOAD_URL=${encodeURIComponent(zipDownloadUrl)}&FUNCTIONAL_NAME=${encodeURIComponent(functionalName)}`, {
@@ -61,14 +90,52 @@ export default function DeployRepo() {
       });
 
       const status = await buildrepo;
+
       console.log(status);
 
+      const parsedPort = targetPort ? Number(targetPort) : 3000; // Convert to number, default to 3000
 
-      //calling kubedeploy
+      //calling kubedeploy MAKE SURE YOU ALLOW SPECIFICATION OF PORT AND IF PORT AINT SPECIFIED IT IS BY DEFAULT 3000
+      const deployUrl = `/api/kubedeploy?functional_name=${encodeURIComponent(functionalName)}${targetPort ? `&target_port=${encodeURIComponent(parsedPort)}` : ''}`;
 
-      // Further logic for deployment and database recording
+      const kubedeploy = await fetch(`/api/kubedeploy?functional_name=${encodeURIComponent(functionalName)}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+
+      const kubedeploy_status = await kubedeploy;
+      console.log(kubedeploy_status);
+
+      // Further logic and database recording.
+
+              //  Fetching the user's id.
+      const userid = await fetch('/api/getuserid', {
+          method: 'GET',
+      });
+      const userID = await userid.text();
+
+      const update_db = await fetch(`/api/add_project?userid=${encodeURIComponent(userID)}&projectName=${encodeURIComponent(projectName)}&functionalName=${encodeURIComponent(functionalName)}&framework=${encodeURIComponent('framework')}&commitActivity=${encodeURIComponent('commitActivity')}`, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+    });
+    
+      const update_db_status = await update_db;
+      console.log(update_db_status);
+
+      const hi = await router.push('/projects')    
+
     }
   };
+
+
+
+
+
+
 
   const installGithubApp = async () => {
     console.log('button pressed')
@@ -126,16 +193,28 @@ export default function DeployRepo() {
             <CardContent>
               {(!repositories || repositories.length === 0) ? (
                 <form>
-                <Button formAction={installGithubApp}>Looks like we can't access your repos just yet, click here</Button>
+                <Button formAction={installGithubApp}>Looks like we cant access your repos just yet, click here</Button>
                 </form>
               ) : (
                 <div className="grid gap-4">
                   <div className="grid gap-2">
                     <Label htmlFor="Project Name">Project Name</Label>
-                    <Input id="branch" placeholder="hello-world" />
+                    <Input 
+                      id="branch"
+                      placeholder="hello-world"
+                      value={projectName}
+                      onChange={(e) => setProjectName(e.target.value)}
+                     />
                   </div>
                   <div className="grid grid-cols-[1fr_auto] items-center gap-4">
-                    <Select onValueChange={(value) => setSelectedRepo(repositories.find(repo => repo.reponame === value))}>
+                 
+                 
+                 <Select onValueChange={(value) => {
+                    const repo = repositories.find(repo => repo.reponame === value);
+                    setSelectedRepo(repo || null);}}>
+
+
+
                       <SelectTrigger className="w-full">
                         <SelectValue placeholder="Select a GitHub repository" />
                       </SelectTrigger>
@@ -151,11 +230,24 @@ export default function DeployRepo() {
                       </SelectContent>
                     </Select>
                   </div>
-                </div>
+                    <Input 
+                      id="port"
+                      type="number"
+                      placeholder="Port(Optional) Eg. 3000"
+                      value={targetPort}
+                      onChange={(e) => setTargetPort(e.target.value)}/>
+                    </div>
               )}
             </CardContent>
             <CardFooter>
-              <Button className="ml-auto" onClick={handleDeploy} disabled={!selectedRepo}>Deploy</Button>
+
+              <Button
+               className="ml-auto"
+               onClick={handleDeploy}
+               disabled={!selectedRepo || !projectName}>
+                  Deploy
+              </Button>
+
             </CardFooter>
           </Card>
         </div>
@@ -164,7 +256,7 @@ export default function DeployRepo() {
   );
 }
 
-function FrameIcon(props) {
+function FrameIcon(props: any) {
   return (
     <svg
       {...props}
@@ -186,7 +278,7 @@ function FrameIcon(props) {
   );
 }
 
-function PlusIcon(props) {
+function PlusIcon(props: any) {
   return (
     <svg
       {...props}

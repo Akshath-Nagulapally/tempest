@@ -45,7 +45,7 @@ export async function GET(request: Request) {
     .select('functional_name')
 
 
-    const existingFunctionalNames = projects?.map(item => item.functional_name);
+    const existingFunctionalNames = projects?.map(item => item.functional_name) || [];
 
     console.log(existingFunctionalNames); // Output: ['hithere1235r', 'asd']
 
@@ -54,6 +54,6 @@ export async function GET(request: Request) {
     }
 
     const functionalName = generateFunctionalName(projectName, existingFunctionalNames);
-    
+    console.log("from the api boss", functionalName)
     return new Response(functionalName);
 }
