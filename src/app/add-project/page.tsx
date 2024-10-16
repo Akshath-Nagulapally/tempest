@@ -193,7 +193,7 @@ export default function DeployRepo() {
             <CardContent>
               {(!repositories || repositories.length === 0) ? (
                 <form>
-                <Button formAction={installGithubApp}>Looks like we cant access your repos just yet, click here</Button>
+                <Button formAction={installGithubApp}>Loading repos..</Button>
                 </form>
               ) : (
                 <div className="grid gap-4">
@@ -233,7 +233,7 @@ export default function DeployRepo() {
                     <Input 
                       id="port"
                       type="number"
-                      placeholder="Port(Optional) Eg. 3000"
+                      placeholder="Port: Default 3000 (Optional)"
                       value={targetPort}
                       onChange={(e) => setTargetPort(e.target.value)}/>
                     </div>
